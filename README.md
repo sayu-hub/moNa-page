@@ -1,19 +1,41 @@
-# test ブランチによる編集　06-02
-これはテスト用の追記です
+## 📁 フォルダ構成 (Directory Structure)
 
-# React + Vite
+本プロジェクトは React + Vite で構築されており、コンポーネントやデータを機能ごとに分割して管理しています。
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+moNa-page/
+ ├── public/                # ビルド時に加工されない静的ファイル（ファビコンなど）
+ │   └── vite.svg           
+ │
+ ├── src/                   # ソースコード本体
+ │   ├── assets/            # Viteによって最適化されるアセット（画像など）
+ │   │   └── images/        # ページ・用途ごとに整理された画像フォルダ
+ │   │       ├── common/    # サイト全体で共通して使う画像（ロゴ、背景など）
+ │   │       ├── guide/     # User Guide用の画像
+ │   │       ├── home/      # トップページ（Heroセクションなど）用の画像
+ │   │       ├── news/      # News記事内で使用する画像
+ │   │       └── products/  # 各プロダクト（moNa, moNa2など）の画像
+ │   │
+ │   ├── data/              # サイト内に表示するコンテンツデータ
+ │   │   ├── items.js       # ナビゲーション、商品情報、メンバー情報などの基本データ
+ │   │   └── news.jsx       # News記事のデータ（画像やリンクなどのJSXタグを含む）
+ │   │
+ │   ├── pages/             # 各独立したページ（ビュー）のコンポーネント
+ │   │   ├── Keymap-Editor.jsx # キーマップエディタ画面
+ │   │   ├── moNa.jsx          # 商品詳細ページ (moNa)
+ │   │   ├── moNa2.jsx         # 商品詳細ページ (moNa 2)
+ │   │   ├── moNa2plus.jsx     # 商品詳細ページ (moNa 2+)
+ │   │   ├── NewsList.jsx      # News一覧・ポップアップ表示用ページ
+ │   │   └── UserGuide.jsx     # ユーザーガイド画面
+ │   │
+ │   ├── App.jsx            # メインコンポーネント（ルーティング機能とトップページのUI）
+ │   ├── index.css          # グローバルCSS（Tailwind CSSの読み込み、カスタムフォント等）
+ │   └── main.jsx           # Reactのアプリケーションエントリポイント
+ │
+ ├── .gitignore             # Gitの管理から除外するファイルの設定
+ ├── eslint.config.js       # ESLint（構文チェックツール）の設定ファイル
+ ├── index.html             # ベースとなるHTMLファイル
+ ├── package.json           # プロジェクトの依存パッケージやスクリプトの定義
+ ├── package-lock.json      # インストールされたパッケージの正確なバージョン情報
+ ├── README.md              # プロジェクトの説明書（このファイル）
+ └── vite.config.js         # Vite（ビルドツール・開発サーバー）の設定ファイル
