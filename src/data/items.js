@@ -2,7 +2,7 @@ export const navLinks = [
   { name: 'News', href: '#news', isPage: false },
   { name: 'Works', href: '#work', isPage: false },
   { name: 'Gallery', href: '#gallery', isPage: false },
-  { name: 'User Guide', viewTarget: 'guide', isPage: true },
+  { name: 'Support&Guide', href: '#guide', isPage: false },
   { name: 'Keymap Editor', viewTarget: 'keymap', isPage: true },
   { name: 'Member', href: '#member', isPage: false },
 ];
