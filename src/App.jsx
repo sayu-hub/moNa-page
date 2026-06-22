@@ -866,7 +866,7 @@ export default function App() {
       <section id="gallery" className="py-24 px-0 md:px-12 bg-white relative z-10 border-t border-slate-100">
         <div className="max-w-6xl mx-auto px-6 md:px-0 mb-12 text-center reveal">
           <h2 className="text-3xl font-bold inline-block relative text-slate-900">
-            User Showcase
+            Gallary
             <span className="absolute bottom-1 left-0 w-full h-3 bg-blue-100 -z-10 rounded-full transform -rotate-1"></span>
           </h2>
           <p className="text-slate-500 mt-4 font-medium">ユーザーの皆様のカスタム例をご紹介</p>
