@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowRight, Twitter, Instagram, ChevronRight, Star, Sparkles, ArrowDown, ShoppingCart, Zap, ArrowLeft, BookOpen, Keyboard, Lightbulb } from 'lucide-react';
-import { navLinks, newsItems, mainWorks, accessories, members, tweetUrls } from './data/items';
+import { navLinks, mainWorks, accessories, members, tweetUrls } from './data/items';
+import { newsData } from './data/news';
 
 // pages フォルダ配下のコンポーネントをインポート
+import NewsList from './pages/NewsList';
 import Mona from './pages/moNa';
 import Mona2 from './pages/moNa2';
 import Mona2plus from './pages/moNa2plus';
@@ -68,6 +70,7 @@ export default function App() {
   const [view, setView] = useState('home'); // 'home' | 'moNa' | 'moNa2' | 'moNa2plus' | 'guide' | 'keymap'
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [selectedNews, setSelectedNews] = useState(null);
   const scrollContainerRef = useRef(null);
   const galleryScrollRef = useRef(null);
 
@@ -192,7 +195,7 @@ export default function App() {
   if (view === 'moNa2plus') return <Mona2plus onBack={() => setView('home')} />;
   if (view === 'guide') return <UserGuide onBack={() => setView('home')} />;
   if (view === 'keymap') return <KeymapEditor onBack={() => setView('home')} />;
-
+  if (view === 'newsList') return <NewsList onBack={() => setView('home')} />;
 
   // === ホーム画面のレンダリング ===
   return (
@@ -310,8 +313,13 @@ export default function App() {
           </div>
           
           <div className="flex-1 space-y-8">
-            {newsItems.map((news, index) => (
-              <article key={index} className="reveal border-b border-slate-100 pb-6 last:border-0 cursor-pointer group">
+            {/* ▼ newsData から最新3件だけを取得して表示 ▼ */}
+            {newsData.slice(0, 3).map((news) => (
+              <article 
+                key={news.id} 
+                onClick={() => setSelectedNews(news)}
+                className="reveal border-b border-slate-100 pb-6 last:border-0 cursor-pointer group"
+              >
                 <div className="flex items-center gap-4 mb-2">
                   <time className="text-sm text-slate-400 font-mono font-medium tracking-wide">{news.date}</time>
                   <span className={`text-[11px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider bg-emerald-50 text-emerald-700`}>
@@ -324,10 +332,13 @@ export default function App() {
               </article>
             ))}
             <div className="pt-4 reveal text-right md:text-left">
-              <a href="#" className="inline-flex items-center text-sm font-bold text-slate-400 hover:text-emerald-600 transition-colors gap-1 group">
+              <button 
+                onClick={() => { setView('newsList'); window.scrollTo(0, 0); }}
+                className="inline-flex items-center text-sm font-bold text-slate-400 hover:text-emerald-600 transition-colors gap-1 group"
+              >
                 すべての記事を見る 
                 <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform"/>
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -591,6 +602,35 @@ export default function App() {
           <p className="flex items-center gap-2">Handcrafted with <span className="text-lg">🎋</span> & <span className="text-lg">🐼</span></p>
         </div>
       </footer>
+      
+      {/* ▼ ニュース用ポップアップ ▼ */}
+      {selectedNews && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 animate-fade-in">
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setSelectedNews(null)}></div>
+          <div className="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+              <div className="flex items-center gap-3">
+                <time className="text-sm text-slate-500 font-mono font-medium">{selectedNews.date}</time>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider bg-emerald-50 text-emerald-700">
+                  {selectedNews.category}
+                </span>
+              </div>
+              <button onClick={() => setSelectedNews(null)} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+            <div className="p-6 sm:p-10 overflow-y-auto no-scrollbar">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-800 mb-8 leading-tight">
+                {selectedNews.title}
+              </h2>
+              <div className="text-slate-600 leading-loose font-medium whitespace-pre-wrap">
+                {selectedNews.content}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

@@ -7,11 +7,11 @@ export const navLinks = [
   { name: 'Member', href: '#member', isPage: false },
 ];
 
-export const newsItems = [
-  { date: '2024.05.20', title: 'moNa 2+ の販売を開始しました', category: 'Product' },
-  { date: '2024.04.15', title: '技術書典16 に出展します', category: 'Event' },
-  { date: '2024.03.01', title: 'Webサイトをリニューアルしました', category: 'Info' },
-];
+// export const newsItems = [
+//   { date: '2024.05.20', title: 'moNa 2+ の販売を開始しました', category: 'Product' },
+//   { date: '2024.04.15', title: '技術書典16 に出展します', category: 'Event' },
+//   { date: '2024.03.01', title: 'Webサイトをリニューアルしました', category: 'Info' },
+// ];
 
 export const mainWorks = [
   {
