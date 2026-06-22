@@ -4,7 +4,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # mainブランチにプッシュされたら実行
+      - main
+
+# ▼ 権限を明示的に指定します ▼
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -16,7 +20,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20' # もしエラーが続く場合は '22' や '24' に変更してみてください
 
       - name: Install dependencies
         run: npm install
@@ -28,4 +32,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # buildした結果を公開
+          publish_dir: ./dist
