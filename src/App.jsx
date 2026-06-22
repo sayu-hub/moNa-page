@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ArrowRight, Twitter, Instagram, ChevronRight, Star, Sparkles, ArrowDown, BookOpen, Lightbulb } from 'lucide-react';
-
-// 作成したデータをインポート
+import { Menu, X, ArrowRight, Twitter, Instagram, ChevronRight, Star, Sparkles, ArrowDown, ShoppingCart, Zap, ArrowLeft, BookOpen, Keyboard, Lightbulb } from 'lucide-react';
 import { navLinks, newsItems, mainWorks, accessories, members, tweetUrls } from './data/items';
 
-// 作成した各ページコンポーネントをインポート
+// pages フォルダ配下のコンポーネントをインポート
 import Mona from './pages/moNa';
 import Mona2 from './pages/moNa2';
 import Mona2plus from './pages/moNa2plus';
 import UserGuide from './pages/UserGuide';
+import KeymapEditor from './pages/Keymap-Editor';
 
 // ==========================================
-// Twitter埋め込みコンポーネント
+// 1. Twitter埋め込みコンポーネント
 // ==========================================
 const TweetEmbed = ({ url }) => {
   const containerRef = useRef(null);
@@ -61,11 +60,12 @@ const TweetEmbed = ({ url }) => {
   );
 };
 
+
 // ==========================================
-// メインAppコンポーネント
+// 2. メインAppコンポーネント
 // ==========================================
 export default function App() {
-  const [view, setView] = useState('home'); // 'home' | 'moNa' | 'moNa2' | 'moNa2plus' | 'guide'
+  const [view, setView] = useState('home'); // 'home' | 'moNa' | 'moNa2' | 'moNa2plus' | 'guide' | 'keymap'
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const scrollContainerRef = useRef(null);
@@ -187,26 +187,18 @@ export default function App() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   // === ルーティング処理（Viewの切り替え） ===
-  if (view === 'moNa') {
-    return <Mona onBack={() => setView('home')} />;
-  }
-  if (view === 'moNa2') {
-    return <Mona2 onBack={() => setView('home')} />;
-  }
-  if (view === 'moNa2plus') {
-    return <Mona2plus onBack={() => setView('home')} />;
-  }
-  if (view === 'guide') {
-    return <UserGuide onBack={() => setView('home')} />;
-  }
+  if (view === 'moNa') return <Mona onBack={() => setView('home')} />;
+  if (view === 'moNa2') return <Mona2 onBack={() => setView('home')} />;
+  if (view === 'moNa2plus') return <Mona2plus onBack={() => setView('home')} />;
+  if (view === 'guide') return <UserGuide onBack={() => setView('home')} />;
+  if (view === 'keymap') return <KeymapEditor onBack={() => setView('home')} />;
+
 
   // === ホーム画面のレンダリング ===
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden relative">
-      {/* 全体のノイズオーバーレイ */}
       <div className="fixed inset-0 pointer-events-none z-0 bg-noise opacity-40 mix-blend-overlay"></div>
 
-      {/* Header */}
       <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-white/80 backdrop-blur-lg py-3 shadow-sm border-b border-white/20' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
           <a href="#" className="text-xl font-bold tracking-tight flex items-center gap-2 group hover:opacity-80 transition-opacity">
@@ -221,10 +213,26 @@ export default function App() {
 
           <nav className="hidden md:flex gap-8">
             {navLinks.map((link) => (
-              <a key={link.name} href={link.href} className="relative text-sm font-bold text-slate-600 hover:text-emerald-600 transition-colors py-1 group">
-                {link.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-400 transition-all duration-300 group-hover:w-full"></span>
-              </a>
+              link.isPage ? (
+                <button 
+                  key={link.name} 
+                  onClick={() => { setView(link.viewTarget); window.scrollTo(0, 0); }} 
+                  className="relative text-sm font-bold text-slate-600 hover:text-emerald-600 transition-colors py-1 group"
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-400 transition-all duration-300 group-hover:w-full"></span>
+                </button>
+              ) : (
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  onClick={() => { if(view !== 'home') setView('home'); }}
+                  className="relative text-sm font-bold text-slate-600 hover:text-emerald-600 transition-colors py-1 group"
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-emerald-400 transition-all duration-300 group-hover:w-full"></span>
+                </a>
+              )
             ))}
           </nav>
 
@@ -237,9 +245,24 @@ export default function App() {
       {/* Mobile Nav Overlay */}
       <div className={`fixed inset-0 bg-white/95 backdrop-blur-xl z-[60] flex flex-col items-center justify-center gap-8 transition-all duration-500 ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
         {navLinks.map((link) => (
-          <a key={link.name} href={link.href} onClick={() => setIsMenuOpen(false)} className="text-3xl font-extrabold text-slate-800 hover:text-emerald-600 tracking-tight">
-            {link.name}
-          </a>
+          link.isPage ? (
+            <button 
+              key={link.name} 
+              onClick={() => { setView(link.viewTarget); window.scrollTo(0, 0); setIsMenuOpen(false); }} 
+              className="text-3xl font-extrabold text-slate-800 hover:text-emerald-600 tracking-tight"
+            >
+              {link.name}
+            </button>
+          ) : (
+            <a 
+              key={link.name} 
+              href={link.href} 
+              onClick={() => { setIsMenuOpen(false); if(view !== 'home') setView('home'); }} 
+              className="text-3xl font-extrabold text-slate-800 hover:text-emerald-600 tracking-tight"
+            >
+              {link.name}
+            </a>
+          )
         ))}
         <button onClick={() => setIsMenuOpen(false)} className="absolute top-6 right-6 p-3 bg-slate-100 hover:bg-slate-200 transition-colors rounded-full shadow-sm">
           <X size={24} />
@@ -321,22 +344,14 @@ export default function App() {
             <p className="text-slate-500 mt-4 font-medium">こだわり抜いたプロダクトコレクション</p>
           </div>
 
-          {/* Main Products */}
           <div className="space-y-32 mb-40">
             {mainWorks.map((work, index) => {
-              // 各商品ごとの遷移先を決定
-              let targetView = 'home';
-              if (work.id === '01') targetView = 'moNa';
-              if (work.id === '02') targetView = 'moNa2';
-              if (work.id === '03') targetView = 'moNa2plus';
-
               return (
                 <div key={work.id} className={`${work.animClass} flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-24 items-center`}>
                   <div 
                     className="w-full md:w-1/2 relative group cursor-pointer"
                     onClick={() => {
-                      setView(targetView);
-                      window.scrollTo(0, 0); // 上にスクロール
+                      setView(work.targetView);
                     }}
                   >
                     <div className="absolute inset-0 bg-emerald-900/5 rounded-[2rem] transform translate-x-4 translate-y-4 transition-transform duration-500 group-hover:translate-x-6 group-hover:translate-y-6"></div>
@@ -375,7 +390,6 @@ export default function App() {
             })}
           </div>
 
-          {/* Accessories */}
           <div className="reveal">
             <div className="flex items-end justify-between mb-8 px-2 border-b border-slate-200 pb-4">
               <h3 className="text-2xl font-bold text-slate-800">Accessories & Parts</h3>
@@ -422,20 +436,20 @@ export default function App() {
             <p className="text-slate-500 mt-4 font-medium">購入後のセットアップから、よりディープなカスタマイズまで</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6 lg:gap-8">
             <div 
               onClick={() => {
                 setView('guide');
-                window.scrollTo(0, 0); // 上にスクロール
+                window.scrollTo(0, 0);
               }} 
-              className="cursor-pointer group bg-slate-50 rounded-[2.5rem] p-10 border-2 border-slate-100 hover:border-emerald-200 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 relative overflow-hidden reveal-left"
+              className="cursor-pointer group bg-slate-50 rounded-[2.5rem] p-8 lg:p-10 border-2 border-slate-100 hover:border-emerald-200 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 relative overflow-hidden reveal-left"
             >
               <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-300 to-emerald-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
               <div className="w-16 h-16 bg-white border-2 border-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 mb-8 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 shadow-sm">
                 <BookOpen size={32} />
               </div>
               <h3 className="text-2xl font-bold text-slate-800 mb-4">User Guide</h3>
-              <p className="text-slate-600 leading-relaxed mb-8 font-medium">
+              <p className="text-slate-600 leading-relaxed mb-8 font-medium text-sm lg:text-base">
                 初めての方はこちらから。内容物の確認からPCへの接続、ブラウザを使ったキーマップの変更まで、基本のセットアップ手順をご案内します。
               </p>
               <div className="inline-flex items-center text-emerald-600 font-bold group-hover:translate-x-2 transition-transform">
@@ -443,16 +457,38 @@ export default function App() {
               </div>
             </div>
 
-            <div className="group bg-slate-50 rounded-[2.5rem] p-10 border-2 border-slate-100 relative overflow-hidden reveal-right opacity-80 cursor-default">
+            <div 
+              onClick={() => {
+                setView('keymap');
+                window.scrollTo(0, 0);
+              }} 
+              className="cursor-pointer group bg-slate-50 rounded-[2.5rem] p-8 lg:p-10 border-2 border-slate-100 hover:border-emerald-200 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 relative overflow-hidden reveal"
+            >
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-300 to-emerald-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+              <div className="w-16 h-16 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-8 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 shadow-sm">
+                <Keyboard size={32} />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-4">
+                Keymap Editor
+              </h3>
+              <p className="text-slate-500 leading-relaxed mb-8 font-medium text-sm lg:text-base">
+                ブラウザから直接キーマップを変更できます。専用ソフトのインストールは不要です。（WebHID API使用）
+              </p>
+              <div className="inline-flex items-center text-emerald-600 font-bold group-hover:translate-x-2 transition-transform">
+                エディタを開く <ArrowRight size={18} className="ml-2" />
+              </div>
+            </div>
+
+            <div className="group bg-slate-50 rounded-[2.5rem] p-8 lg:p-10 border-2 border-slate-100 relative overflow-hidden reveal-right opacity-80 cursor-default">
               <div className="w-16 h-16 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 mb-8 shadow-sm">
                 <Lightbulb size={32} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-3">
+              <h3 className="text-2xl font-bold text-slate-800 mb-4 flex flex-col items-start gap-2 xl:flex-row xl:items-center">
                 Topics & Tips
-                <span className="text-[10px] bg-slate-200 text-slate-600 px-2 py-1 rounded font-black tracking-widest uppercase">Coming Soon</span>
+                <span className="text-[10px] bg-slate-200 text-slate-600 px-2 py-1 rounded font-black tracking-widest uppercase mt-1 xl:mt-0">Coming Soon</span>
               </h3>
-              <p className="text-slate-500 leading-relaxed mb-8 font-medium">
-                キーボードをもっと自分好みに。レイヤー機能の活用術やおすすめのマクロ設定、打鍵感を高める静音化のコツなどの応用テクニックを紹介します。
+              <p className="text-slate-500 leading-relaxed mb-8 font-medium text-sm lg:text-base">
+                もっと自分好みに。レイヤー機能の活用術やマクロ設定、打鍵感を高める静音化のコツなどの応用テクニックを紹介します。
               </p>
               <div className="inline-flex items-center text-slate-400 font-bold">
                 近日公開予定
@@ -466,7 +502,7 @@ export default function App() {
       <section id="gallery" className="py-24 px-0 md:px-12 bg-white relative z-10 border-t border-slate-100">
         <div className="max-w-6xl mx-auto px-6 md:px-0 mb-12 text-center reveal">
           <h2 className="text-3xl font-bold inline-block relative text-slate-900">
-            User Showcase
+            Gallery
             <span className="absolute bottom-1 left-0 w-full h-3 bg-blue-100 -z-10 rounded-full transform -rotate-1"></span>
           </h2>
           <p className="text-slate-500 mt-4 font-medium">ユーザーの皆様のカスタム例をご紹介</p>
@@ -555,6 +591,10 @@ export default function App() {
           <p className="flex items-center gap-2">Handcrafted with <span className="text-lg">🎋</span> & <span className="text-lg">🐼</span></p>
         </div>
       </footer>
+      <style>{`
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
     </div>
   );
 }
