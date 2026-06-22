@@ -1,7 +1,7 @@
 export const navLinks = [
     { name: 'News', href: '#news' },
     { name: 'Works', href: '#work' },
-    { name: 'Guide', href: '#guide' },
+    { name: 'Gallery', href: '#gallery' },
     { name: 'Member', href: '#member' },
 ];
 
@@ -60,4 +60,11 @@ export const members = [
         bio: '筐体デザインと意匠を担当。手に触れる素材感にこだわる。パンダグッズ収集家。',
         id: 'creator_b'
     },
+];
+
+export const tweetUrls = [
+    "https://x.com/Pooh_pol0/status/2018878320671387878?s=20",
+    "https://x.com/Pooh_pol0/status/2018878320671387878?s=20",
+    "https://x.com/Pooh_pol0/status/2018878320671387878?s=20",
+    "https://x.com/Pooh_pol0/status/2018878320671387878?s=20"
 ];
