@@ -10,6 +10,8 @@ export default function NewsList({ onBack }) {
     window.scrollTo(0, 0);
   }, []);
 
+  const sortedNews = [...newsData].sort((a, b) => b.date.localeCompare(a.date));
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 pb-32">
       {/* ヘッダー */}
@@ -33,9 +35,10 @@ export default function NewsList({ onBack }) {
 
         {/* ニュース一覧リスト */}
         <div className="space-y-6">
-          {newsData.map((news) => (
+          {/* ▼ newsData を sortedNews に変更し、key を index にする ▼ */}
+          {sortedNews.map((news, index) => (
             <article 
-              key={news.id} 
+              key={index} 
               onClick={() => setSelectedNews(news)}
               className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all cursor-pointer group flex flex-col md:flex-row md:items-center gap-4 md:gap-8"
             >
