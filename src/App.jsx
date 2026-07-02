@@ -13,6 +13,10 @@ import KeymapEditor from './pages/Keymap-Editor';
 import AccessoriesList from './pages/AccessoriesList';
 import TweetEmbed from './components/TweetEmbed';
 
+// ▼▼▼ 追加：背景画像をインポートする ▼▼▼
+import heroBgImage from './assets/images/common/moNa2.png';
+// ▲▲▲ ここまで ▲▲▲
+
 // ==========================================
 // note カスタムアイコンコンポーネント
 // ==========================================
@@ -259,7 +263,9 @@ export default function App() {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[30s] hover:scale-105"
           style={{ 
-            backgroundImage: 'url("src/assets/images/common/moNa2.png")',
+            // ▼▼▼ 変更：インポートした背景画像の変数を使うように修正 ▼▼▼
+            backgroundImage: `url(${heroBgImage})`,
+            // ▲▲▲ ここまで ▲▲▲
           }}
         >
           <div className="absolute inset-0 bg-slate-900/20 mix-blend-multiply"></div>
@@ -283,11 +289,10 @@ export default function App() {
         </div>
       </section>
 
-      {/* ▼ News Section (レイアウトを維持しつつ全体を大幅にスケールアップ) ▼ */}
+      {/* News Section */}
       <section id="news" className="py-32 px-6 md:px-12 bg-white relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-12 md:gap-24">
           <div className="md:w-1/3 reveal">
-            {/* 見出し文字を 4xl/5xl に拡大、横の緑ラインも太く長く調整 */}
             <h2 className="text-4xl md:text-5xl font-bold mb-6 flex items-center gap-4 text-slate-800 tracking-tight">
               <span className="w-12 h-1.5 bg-emerald-600 rounded-full"></span>
               News
@@ -303,21 +308,17 @@ export default function App() {
                 className="reveal border-b border-slate-200 pb-8 last:border-0 cursor-pointer group"
               >
                 <div className="flex items-center gap-5 mb-4">
-                  {/* 日付を text-base に拡大 */}
                   <time className="text-base text-slate-400 font-mono font-medium tracking-wide">{news.date}</time>
-                  {/* カテゴリータグも一回り大きく */}
                   <span className={`text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wider bg-emerald-50 text-emerald-700`}>
                     {news.category}
                   </span>
                 </div>
-                {/* 記事タイトルを xl/2xl に拡大し、迫力を出す */}
                 <h3 className="text-xl md:text-2xl font-bold text-slate-800 group-hover:text-emerald-600 transition-colors leading-snug">
                   {news.title}
                 </h3>
               </article>
             ))}
             <div className="pt-6 reveal text-right md:text-left">
-              {/* 「すべての記事を見る」ボタンも text-base とアイコンを大きく */}
               <button 
                 onClick={() => { setView('newsList'); window.scrollTo(0, 0); }}
                 className="inline-flex items-center text-base font-bold text-slate-400 hover:text-emerald-600 transition-colors gap-2 group"
@@ -329,12 +330,10 @@ export default function App() {
           </div>
         </div>
       </section>
-      {/* ▲ News Section ここまで ▲ */}
 
       {/* Works Section */}
       <section id="work" className="py-32 bg-slate-50/80 relative z-10 border-t border-slate-100">
         <div className="px-6 md:px-12 max-w-6xl mx-auto">
-          {/* コンセプトテキストをWorksの先頭に配置 */}
           <div className="mb-24 text-center md:text-left reveal">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-900 inline-block relative">
               Works
@@ -406,7 +405,7 @@ export default function App() {
               className="flex overflow-x-auto pb-12 gap-6 no-scrollbar snap-x snap-mandatory"
             >
               {randomAccessories.map((item, index) => {
-                const isImage = item.image.includes('/') || item.image.includes('.');
+                const isImage = typeof item.image === 'string' ? item.image.includes('/') || item.image.includes('.') : !!item.image;
                 
                 return (
                   <a 
@@ -605,9 +604,7 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      {/* ▼ py-16 を py-8 に減らして全体の上下の余白を縮めました ▼ */}
       <footer className="bg-slate-900 text-white py-8 border-t-4 border-emerald-600 relative z-10 overflow-hidden">
-        {/* 背景の巨大な「moNa」の文字 */}
         <div className="absolute -bottom-10 -left-10 text-[10rem] font-black text-slate-800 select-none opacity-50 pointer-events-none">moNa</div>
         
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6 relative">
@@ -624,7 +621,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* ▼ mt-12 pt-8 を mt-8 pt-6 に減らして、コピーライト上の線とのすき間を詰めました ▼ */}
         <div className="max-w-6xl mx-auto px-6 mt-8 pt-6 border-t border-slate-800 flex justify-center md:justify-between items-center text-xs text-slate-500 font-bold">
           <p>&copy; {new Date().getFullYear()} sayu shakupan.</p>
         </div>
